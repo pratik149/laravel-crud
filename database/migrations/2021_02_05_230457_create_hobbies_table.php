@@ -14,8 +14,10 @@ class CreateHobbiesTable extends Migration
     public function up()
     {
         Schema::create('hobbies', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+			$table->id();
+            $table->string('name');
+			$table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 
