@@ -18,7 +18,9 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
+		'phone',
+		'address',
+		'gender',
         'password',
     ];
 
@@ -37,7 +39,24 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    // protected $casts = [
+    //     'email_verified_at' => 'datetime',
+	// ];
+	
+    /**
+     * Get the city that for the User.
+	 * 
+     */
+    public function city()
+    {
+        return $this->belongsTo('App\Models\City');
+	}
+	
+    /**
+     * Get the hobbies for the User.
+     */
+    public function hobbies()
+    {
+        return $this->hasMany('App\Models\Hobby');
+    }
 }
