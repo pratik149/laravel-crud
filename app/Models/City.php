@@ -22,4 +22,13 @@ class City extends Model
      * @var array
      */
 	protected $guarded = ['id','created_at','updated_at'];
+
+    /**
+     * Get the users for the city.
+	 * 
+     */
+    public function users()
+    {
+        return $this->hasMany('App\Models\User');
+    }
 }
