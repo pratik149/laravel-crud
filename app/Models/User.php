@@ -57,6 +57,6 @@ class User extends Authenticatable
      */
     public function hobbies()
     {
-        return $this->hasMany('App\Models\Hobby');
+        return $this->belongsToMany('App\Models\Hobby');
     }
 }
