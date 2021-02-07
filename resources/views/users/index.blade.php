@@ -1,25 +1,31 @@
 @extends('layouts.crud')
 
 @section('content')
+	{{-- Navbar --}}
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
                 <h2>List of Users</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('users.create') }}" title="Create a User"> <i class="fas fa-plus-circle"></i>
-                    </a>
+                <a class="btn btn-success" href="{{ route('users.create') }}" title="Create a User">
+					<i class="fas fa-plus-circle"></i>
+				</a>
             </div>
         </div>
     </div>
 
+	{{-- Display Success Messages If Any --}}
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
     @endif
 
+	{{-- Table of List of Users --}}
     <table class="table table-bordered table-responsive-lg">
+
+		{{-- Table Headings --}}
         <tr>
             <th>No</th>
             <th>Name</th>
@@ -31,8 +37,11 @@
             <th>Created at</th>
             <th>Actions</th>
         </tr>
+
+		{{-- User Table Records --}}
         @foreach ($users as $user)
             <tr id="user-{{$user->id}}">
+
                 <td>{{ $loop->index + 1 }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->phone }}</td>
@@ -41,6 +50,8 @@
                 <td>{{ $user->city->name }}</td>
                 <td>{{ $user->hobbies->pluck('name') }}</td>
                 <td>{{ $user->created_at->format('d/m/Y') }}</td>
+
+				{{-- Actions --}}
                 <td>
 					{{-- Show User Button --}}
 					<a href="/users/{{$user->id}}" title="show">
@@ -60,18 +71,20 @@
         @endforeach
     </table>
 
+	{{-- Pagination Links --}}
     {!! $users->links() !!}
 
 @endsection
 
 <script>
+	// AJAX method to Delete User
 	function deleteUser($id) {
         axios.delete('/users/'+$id)
             .then((response) => {               
 				let userTableRecord = document.getElementById("user-" + $id);
 				userTableRecord.parentNode.removeChild(userTableRecord);
 				console.log(response)
-            },(error) => {
+            } catch(error) => {
 				console.log(error)
             });
        }

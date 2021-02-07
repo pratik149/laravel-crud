@@ -1,6 +1,7 @@
 @extends('layouts.crud')
 
 @section('content')
+	{{-- Navbar --}}
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
@@ -12,6 +13,7 @@
         </div>
     </div>
 
+	{{-- Display Errors If Any--}}
     @if ($errors->any())
         <div class="alert alert-danger">
             <strong>Error!</strong> 
@@ -23,11 +25,11 @@
         </div>
     @endif
 
+	{{-- Edit User Form --}}
     <form action="{{ route('users.update', $user) }}" method="POST" >
         @csrf
 		@method('PUT')
         <div class="row">
-
 			<div class="col-xs-12 col-sm-12 col-md-12">
 				{{-- Full Name --}}
 				<div class="form-group row">
@@ -35,11 +37,6 @@
 
 					<div class="col-md-6">
 						<input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $user->name ?? '' }}" required autocomplete="name" autofocus>
-						@error('name')
-							<span class="invalid-feedback" role="alert">
-								<strong>{{ $message }}</strong>
-							</span>
-						@enderror
 					</div>
 				</div>
 				
@@ -49,11 +46,6 @@
 
 					<div class="col-md-6">
 						<input id="phone" type="phone" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ $user->phone ?? '' }}" required autocomplete="phone">
-						@error('phone')
-							<span class="invalid-feedback" role="alert">
-								<strong>{{ $message }}</strong>
-							</span>
-						@enderror
 					</div>
 				</div>
 
@@ -63,11 +55,6 @@
 
 					<div class="col-md-6">
 						<textarea id="address" type="address" class="form-control @error('address') is-invalid @enderror" name="address" required autocomplete="address">{{ $user->address ?? '' }}</textarea>
-						@error('address')
-							<span class="invalid-feedback" role="alert">
-								<strong>{{ $message }}</strong>
-							</span>
-						@enderror
 					</div>
 				</div>
 
@@ -104,12 +91,6 @@
 							<input class="form-check-input" type="radio" name="gender" id="other" value="other" @if ($user->gender == "other") checked @endif>
 							<label class="form-check-label" for="other">Other</label>
 						</div>
-
-						@error('gender')
-							<span class="invalid-feedback" role="alert">
-								<strong>{{ $message }}</strong>
-							</span>
-						@enderror
 					</div>
 				</div>
 
@@ -131,12 +112,6 @@
 								</div>
 							@endif
 						@endforeach
-
-						@error('hobbies')
-							<span class="invalid-feedback" role="alert">
-								<strong>{{ $message }}</strong>
-							</span>
-						@enderror
 					</div>
 				</div>
 

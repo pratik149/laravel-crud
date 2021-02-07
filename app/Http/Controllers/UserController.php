@@ -138,7 +138,7 @@ class UserController extends Controller
 
 		$response = [
 			"success" => $success,
-			"message" => "User deleted successfully."
+			"message" => $success ? "User deleted successfully." : "Failed to delete user."
 		];
 
 		return response()->json($response);
