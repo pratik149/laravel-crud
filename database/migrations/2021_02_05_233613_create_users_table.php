@@ -22,7 +22,6 @@ class CreateUsersTable extends Migration
 			$table->string('address');
 			$table->string('gender');
             $table->unsignedBigInteger('city_id');
-			$table->unsignedBigInteger('hobby_id');
             $table->string('password');
             $table->rememberToken();
 			$table->timestamps();
@@ -32,10 +31,6 @@ class CreateUsersTable extends Migration
 		
 		Schema::table('users', function($table) {
 			$table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');;
-		});
-
-		Schema::table('users', function($table) {
-			$table->foreign('hobby_id')->references('id')->on('hobbies')->onDelete('cascade');;
 		});
     }
 
