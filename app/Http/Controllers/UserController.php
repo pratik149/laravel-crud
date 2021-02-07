@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+
+use App\Models\User;
+use App\Models\City;
+use App\Models\Hobby;
 
 class UserController extends Controller
 {
@@ -13,7 +18,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::with('city', 'hobbies')->latest()->paginate(10);
+
+        return view('users.index', compact('users'))
+            ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     /**
@@ -23,7 +31,10 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+		$cities = City::orderBy('name')->get();
+		$hobbies = Hobby::orderBy('created_at')->get();
+
+        return view('users.create', compact('cities', 'hobbies'));
     }
 
     /**
@@ -34,7 +45,28 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+		$request->validate([
+            'name' => 'required|string',
+            'phone' => 'required|digits_between:7,15',
+			'gender' => 'required|string',
+            'address' => 'required|string',
+            'city' => 'required',
+            'hobbies' => 'required|array',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = new User;
+        $user->name = $request->name;
+        $user->phone = $request->phone;
+        $user->gender = $request->gender;
+        $user->address = $request->address;
+		$user->city()->associate($request->city);
+        $user->password = Hash::make($request->password);
+        $user->save();
+        $user->hobbies()->sync($request->hobbies);
+
+        return redirect()->route('users.index')
+            ->with('success', 'User created successfully.');
     }
 
     /**
@@ -43,9 +75,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        //
+        return view('users.show', compact('user'));
     }
 
     /**
@@ -54,9 +86,12 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit(User $user)
+    {	
+		$cities = City::orderBy('name')->get();
+		$hobbies = Hobby::orderBy('created_at')->get();
+
+		return view('users.edit', compact('user', 'cities', 'hobbies'));
     }
 
     /**
@@ -66,9 +101,29 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'phone' => 'required|digits_between:7,15',
+			'gender' => 'required|string',
+            'address' => 'required|string',
+            'city' => 'required',
+            'hobbies' => 'required|array'
+		]);
+
+        $user->name = $request->name;
+        $user->phone = $request->phone;
+        $user->gender = $request->gender;
+        $user->address = $request->address;
+		$user->city()->associate($request->city);
+        $user->save();
+        $user->hobbies()->sync($request->hobbies);
+
+        // $user->update($request->all());
+
+        return redirect()->route('users.index')
+            ->with('success', 'User updated successfully');
     }
 
     /**
@@ -77,8 +132,15 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $success = $user->delete();
+
+		$response = [
+			"success" => $success,
+			"message" => "User deleted successfully."
+		];
+
+		return response()->json($response);
     }
 }
