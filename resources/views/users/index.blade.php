@@ -84,7 +84,7 @@
 				let userTableRecord = document.getElementById("user-" + $id);
 				userTableRecord.parentNode.removeChild(userTableRecord);
 				console.log(response)
-            } catch(error) => {
+            }).catch((error) => {
 				console.log(error)
             });
        }
